@@ -9,32 +9,17 @@ var app = http.createServer(function(req, res) {
 
 	if (pathname === '/') {
 		if(queryData.id === undefined) {
-			var title = 'Welcome';
-			var description = 'Hello, Node.js';
-			var template = `
-			<!doctype html>
-			<html>
-			<head>
-				<title>WEB1 - ${title}</title>
-				<meta charset="utf-8">
-			</head>
-			<body>
-				<h1><a href="/">WEB</a></h1>
-				<ol>
-					<li><a href="/?id=HTML">HTML</a></li>
-					<li><a href="/?id=CSS">CSS</a></li>
-					<li><a href="/?id=JavaScript">JavaScript</a></li>
-				</ol>
-				<h2>${title}</h2>
-				<p>${description}</p>
-			</body>
-			</html>
-			`;
-			res.writeHead(200);
-			res.end(template);
-		} else {
-			fs.readFile(`data/${queryData.id}.txt`, 'utf8', function(err, description){
-				var title = queryData.id;
+
+			fs.readdir('./data', function (err, filelist) {
+				var title = 'Welcome';
+				var description = 'Hello, Node.js';
+				var list = '<ul>';
+				var i = 0;
+				while(i < filelist.length) {
+					list += `<li><a href="/?id=${filelist[i].split('.')[0]}">${filelist[i].split('.')[0]}</a></li>`
+					i++;
+				}
+				list += '</ul>'
 				var template = `
 				<!doctype html>
 				<html>
@@ -44,18 +29,45 @@ var app = http.createServer(function(req, res) {
 				</head>
 				<body>
 					<h1><a href="/">WEB</a></h1>
-					<ol>
-						<li><a href="/?id=HTML">HTML</a></li>
-						<li><a href="/?id=CSS">CSS</a></li>
-						<li><a href="/?id=JavaScript">JavaScript</a></li>
-					</ol>
+					${list}
 					<h2>${title}</h2>
 					<p>${description}</p>
 				</body>
 				</html>
 				`;
-			res.writeHead(200);
-			res.end(template);
+				res.writeHead(200);
+				res.end(template);
+			});
+
+		} else {
+			fs.readdir('./data', function (err, filelist) {
+				var list = '<ul>';
+				var i = 0;
+				while(i < filelist.length) {
+					list += `<li><a href="/?id=${filelist[i].split('.')[0]}">${filelist[i].split('.')[0]}</a></li>`
+					i++;
+				}
+				list += '</ul>'
+				fs.readFile(`data/${queryData.id}.txt`, 'utf8', function(err, description){
+					var title = queryData.id;
+					var template = `
+					<!doctype html>
+					<html>
+					<head>
+						<title>WEB1 - ${title}</title>
+						<meta charset="utf-8">
+					</head>
+					<body>
+						<h1><a href="/">WEB</a></h1>
+						${list}
+						<h2>${title}</h2>
+						<p>${description}</p>
+					</body>
+					</html>
+					`;
+				res.writeHead(200);
+				res.end(template);
+				});
 			});
 		}
 	} else {

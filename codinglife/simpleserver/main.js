@@ -13,6 +13,7 @@ function templateHTML(title, list, body) {
 	<body>
 		<h1><a href="/">WEB</a></h1>
 		${list}
+		<a href="/create">create</a>
 		${body}
 	</body>
 	</html>
@@ -61,9 +62,30 @@ var app = http.createServer(function(req, res) {
 				});
 			});
 		}
+	} else if (pathname === '/create') {
+		fs.readdir('./data', function (err, filelist) {
+			title = 'WEB - create';
+			list = templateList(filelist);
+			template = templateHTML(title, list, 
+				`
+				<form action="http://localhost:3000/process_create" method="post">
+					<p>
+						<input type="text" name="title" placeholder="title">
+					</p>
+					<p>
+						<textarea name="description" placeholder="description"></textarea>
+					</p>
+					<p>
+						<input type="submit">
+					</p>
+				</form>
+				`);
+			res.writeHead(200);
+			res.end(template);
+		});
 	} else {
-		response.writeHead(404);
-		response.end('Not found');
+		res.writeHead(404);
+		res.end('Not found');
 	}
 });
 app.listen(3000);

@@ -25,7 +25,7 @@ function templateList(filelist) {
 	var list = '<ul>';
 	var i = 0;
 	while(i < filelist.length) {
-		list += `<li><a href="/?id=${filelist[i].split('.')[0]}">${filelist[i].split('.')[0]}</a></li>`
+		list += `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
 		i++;
 	}
 	list += '</ul>'
@@ -54,7 +54,7 @@ var app = http.createServer(function(req, res) {
 			});
 		} else {
 			fs.readdir('./data', function (err, filelist) {
-				fs.readFile(`data/${queryData.id}.txt`, 'utf8', function(err, description){
+				fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
 					title = queryData.id;
 					list = templateList(filelist);
 					template = templateHTML(title, list, `<h2>${title}</h2>${description}`);
@@ -89,13 +89,15 @@ var app = http.createServer(function(req, res) {
 		req.on('data', function (data) {
 			body += data;
 		});
-		req.on('end', function( ) {
+		req.on('end', function() {
 			var post = qs.parse(body);
 			title = post.title;
 			description = post.description;
+			fs.writeFile(`data/${title}`, description, 'utf8', function (err) {
+				res.writeHead(302, {Location: `/?id=${title}`});
+				res.end();
+			});
 		});
-		res.writeHead(200);
-		res.end('success');
 	} else {
 		res.writeHead(404);
 		res.end('Not found');

@@ -75,7 +75,7 @@ var app = http.createServer(function(req, res) {
 			list = templateList(filelist);
 			template = templateHTML(title, list, 
 				`
-				<form action="http://localhost:3000/create_process" method="post">
+				<form action="/create_process" method="post">
 					<p>
 						<input type="text" name="title" placeholder="title">
 					</p>
@@ -104,6 +104,32 @@ var app = http.createServer(function(req, res) {
 			fs.writeFile(`data/${title}`, description, 'utf8', function (err) {
 				res.writeHead(302, {Location: `/?id=${title}`});
 				res.end();
+			});
+		});
+	} else if (pathname === '/update') {
+		fs.readdir('./data', function(err, filelist) {
+			fs.readFile(`data/${queryData.id}`, 'utf8', function (err, description) {
+				title = queryData.id;
+				list = templateList(filelist);
+				template = templateHTML(title, list, 
+					`
+					<form action="/update_process" method="post">
+						<input type="hidden" name="id" value="${title}">
+						<p>
+							<input type="text" name="title" placeholder="title" value="${title}">
+						</p>
+						<p>
+							<textarea name="description" placeholder="description">${description}</textarea>
+						</p>
+						<p>
+							<input type="submit">
+						</p>
+					</form>
+					`,
+					`<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
+					);
+				res.writeHead(200);
+				res.end(template);
 			});
 		});
 	} else {

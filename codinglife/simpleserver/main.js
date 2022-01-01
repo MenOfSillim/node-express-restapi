@@ -3,7 +3,7 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 
-function templateHTML(title, list, body) {
+function templateHTML(title, list, body, control) {
 	return `
 	<!doctype html>
 	<html>
@@ -14,7 +14,7 @@ function templateHTML(title, list, body) {
 	<body>
 		<h1><a href="/">WEB</a></h1>
 		${list}
-		<a href="/create">create</a>
+		${control}
 		${body}
 	</body>
 	</html>
@@ -48,7 +48,10 @@ var app = http.createServer(function(req, res) {
 				title = 'Welcome';
 				description = 'Hello, Node.js';
 				list = templateList(filelist);
-				template = templateHTML(title, list, `<h2>${title}</h2>${description}`);
+				template = templateHTML(title, list, 
+					`<h2>${title}</h2>${description}`,
+					`<a href="/create">create</a>`
+					);
 				res.writeHead(200);
 				res.end(template);
 			});
@@ -57,7 +60,10 @@ var app = http.createServer(function(req, res) {
 				fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
 					title = queryData.id;
 					list = templateList(filelist);
-					template = templateHTML(title, list, `<h2>${title}</h2>${description}`);
+					template = templateHTML(title, list,
+						 `<h2>${title}</h2>${description}`,
+						 `<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
+						 );
 					res.writeHead(200);
 					res.end(template);
 				});
@@ -80,7 +86,9 @@ var app = http.createServer(function(req, res) {
 						<input type="submit">
 					</p>
 				</form>
-				`);
+				`,
+				``
+				);
 			res.writeHead(200);
 			res.end(template);
 		});

@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="/css/master.css">
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <h1>Hello
+        <% if(name) { %>
+            <span class="name"><%= name %>!</span>
+        <% } else { %>
+            <span class="stranger">Stranger!</span>
+        <% } %>
+    </h1>
 </body>
 </html>

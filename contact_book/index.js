@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
 
@@ -24,6 +25,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride('_method'));
 
 // DB schema
 const contactSchema = mongoose.Schema({
@@ -56,7 +58,34 @@ app.post('/contacts', (req, res) => {
         res.redirect('/contacts');
     });
 });
-
+// Contacts - show
+app.get('/contacts/:id', (req, res) => {
+    Contact.findOne({_id:req.params.id}, (err, contact) => {
+        if (err) return res.json(err);
+        res.render('contacts/show', {contact:contact});
+    });
+});
+// Contacts - edit
+app.get('/contacts/:id/edit', function(req, res){
+    Contact.findOne({_id:req.params.id}, function(err, contact){
+      if(err) return res.json(err);
+      res.render('contacts/edit', {contact:contact});
+    });
+  });
+// Contacts - update
+app.put('/contacts/:id', (req, res) => {
+    Contact.findOneAndUpdate({_id:req.params.id}, req.body, (err, contact) => {
+        if (err) return res.json(err);
+        res.redirect('/contacts/' + req.params.id);
+    });
+});
+// Contacts - destroy
+app.delete('/contacts/:id', (req, res) => {
+    Contact.deleteOne({_id:req.params.id}, (err) => {
+        if (err) return res.json(err);
+        res.redirect('/contacts');
+    });
+});
 
 app.listen(port, () => {
     console.log(`server on! http://locathost:${port}`);

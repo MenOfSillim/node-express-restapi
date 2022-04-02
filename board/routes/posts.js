@@ -1,4 +1,4 @@
-const express = requrie('express');
+const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 
@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) => {
     Post.findOne({_id:req.params.id}, (err, post) => {
         if (err) return res.json(err);
-        res.render('/posts/show', {post:post});
+        res.render('posts/show', {post:post});
     });
 });
 
@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 router.get('/:id/edit', (req, res) => {
     Post.findOne({_id:req.params.id}, (err, post) => {
         if (err) return res.json(err);
-        res.render('/posts/edit', {post:post});
+        res.render('posts/edit', {post:post});
     });
 });
 
@@ -56,3 +56,5 @@ router.delete('/:id', (req, res) => {
         res.redirect('/posts');
     });
 });
+
+module.exports = router;

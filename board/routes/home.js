@@ -15,8 +15,8 @@ router.get('/login', (req, res) => {
     const username = req.flash('username')[0];
     const errors = req.flash('errors')[0] || {};
     res.render('home/login', {
-        username:username,
-        errors:errors
+        username: username,
+        errors: errors
     });
 });
 
@@ -44,10 +44,10 @@ router.post('/login',
         }
     },
     passport.authenticate('local-login', {
-        successRedirect : '/posts',
-        failureRedirect : '/login'
-    }
-));
+            successRedirect: '/posts',
+            failureRedirect: '/login'
+        }
+    ));
 
 // Logout
 router.get('/logout', (req, res) => {

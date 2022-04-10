@@ -3,54 +3,70 @@ const bcrypt = require('bcryptjs');
 
 // schema
 const userSchema = mongoose.Schema({
-    username:{
-        type:String, 
-        required:[true, 'Username is required!'],
-        match:[/^.{2,12}$/,'Should be 2-12 characters!'],
-        trim:true,
-        unique:true
+    username: {
+        type: String,
+        required: [true, 'Username is required!'],
+        match: [/^.{2,12}$/, 'Should be 2-12 characters!'],
+        trim: true,
+        unique: true
     },
-    password:{
-        type:String,
-        required:[true, 'Password is required!'],
-        select:false
+    password: {
+        type: String,
+        required: [true, 'Password is required!'],
+        select: false
     },
-    name:{
-        type:String,
-        required:[true, 'Name is required!'],
-        match:[/^.{2,12}$/,'Should be 2-12 characters!'],
-        trim:true
+    name: {
+        type: String,
+        required: [true, 'Name is required!'],
+        match: [/^.{2,12}$/, 'Should be 2-12 characters!'],
+        trim: true
     },
-    email:{
-        type:String,
-        match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Should be a vaild email address!'],
-        trim:true
+    email: {
+        type: String,
+        match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Should be a vaild email address!'],
+        trim: true
     }
 }, {
-    toObject:{virtuals:true}
+    toObject: {virtuals: true}
 });
 
 // virtuals
 userSchema.virtual('passwordConfirmation')
-    .get(() => { return this._passwordConfirmation; })
-    .set((value) => { this._passwordConfirmation=value; });
+    .get(() => {
+        return this._passwordConfirmation;
+    })
+    .set((value) => {
+        this._passwordConfirmation = value;
+    });
 
 userSchema.virtual('originalPassword')
-    .get(() => { return this._originalPassword; })
-    .set((value) => { this._originalPassword=value });
+    .get(() => {
+        return this._originalPassword;
+    })
+    .set((value) => {
+        this._originalPassword = value
+    });
 
 userSchema.virtual('currentPassword')
-    .get(() => { return this._currentPassword; })
-    .set((value) => { this._currentPassword=value; });
+    .get(() => {
+        return this._currentPassword;
+    })
+    .set((value) => {
+        this._currentPassword = value;
+    });
 
 userSchema.virtual('newPassword')
-    .get(() => { return this._newPassword; })
-    .set((value) => { this._newPassword=value; })
+    .get(() => {
+        return this._newPassword;
+    })
+    .set((value) => {
+        this._newPassword = value;
+    })
 
 // password validation
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
 const passwordRegexErrorMessage = 'Should be minimum 8 characters of alphabet and number combination!';
-userSchema.path('password').validate(function(v) {
+userSchema.path('password').validate(function (v) {
     const user = this;
 
     // create user

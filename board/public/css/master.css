@@ -1,9 +1,11 @@
 body {
     font-family: 'Open Sans', sans-serif;
 }
+
 .breadcrump-item {
     font-size: 0.8em !important
 }
+
 .ellipsis {
     display: block;
     width: 100%;
@@ -15,6 +17,8 @@ body {
 .board-table {
     table-layout: fixed;
 }
+
+.board-table .author,
 .board-table .date {
     width: 100px;
 }
@@ -22,9 +26,11 @@ body {
 .post-body {
     white-space: pre-line;
 }
+
 .post-info {
     font-size: 0.8em;
 }
+
 .user-form {
     width: 400px;
 }

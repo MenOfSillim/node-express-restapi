@@ -24,7 +24,7 @@ router.get('/login', (req, res) => {
 router.post('/login',
     (req, res, next) => {
         const errors = {};
-        const isValid = true;
+        let isValid = true;
 
         if (!req.body.username) {
             isValid = false;

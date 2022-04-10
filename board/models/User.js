@@ -5,19 +5,19 @@ const bcrypt = require('bcryptjs');
 const userSchema = mongoose.Schema({
     username:{
         type:String, 
-        require:[true, 'Username is required!'],
+        required:[true, 'Username is required!'],
         match:[/^.{2,12}$/,'Should be 2-12 characters!'],
         trim:true,
         unique:true
     },
     password:{
         type:String,
-        require:[true, 'Password is required!'],
+        required:[true, 'Password is required!'],
         select:false
     },
     name:{
         type:String,
-        require:[true, 'Name is required!'],
+        required:[true, 'Name is required!'],
         match:[/^.{2,12}$/,'Should be 2-12 characters!'],
         trim:true
     },
@@ -55,7 +55,7 @@ userSchema.path('password').validate(function(v) {
 
     // create user
     if (user.isNew) {
-        if (!user.passwordConfirmation) {
+        if (user.password && !user.passwordConfirmation) {
             user.invalidate('passwordConfirmation', 'Password Confirmation is required.');
         }
 

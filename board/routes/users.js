@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const util = require('../util');
 
 // index
 router.get('/', (req, res) => {
@@ -69,7 +70,11 @@ router.put('/:username', (req, res, next) => {
 
         // save updated user
         user.save((err, user) => {
-            if (err) return res.json(err);
+            if (err) {
+                req.flash('user', req.body);
+                req.flash('errors', util.parseError(err));
+                return res.redirect(`/users/${req.params.username}/edit`);
+            }
             res.redirect(`/users/${user.username}`);
         });
     });

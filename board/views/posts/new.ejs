@@ -18,14 +18,25 @@
         <form action="/posts" method="post">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" name="title" value="" class="form-control" id="title">
+                <input type="text" name="title" value="<%= post.title %>" class="form-control <%= (errors.title)?'is-invalid':'' %>" id="title">
+                <% if (errors.title) { %>
+                    <span class="invalid-feedback"><%= errors.title.message %></span>
+                <% } %>
             </div>
 
             <div class="form-group">
                 <label for="body">Body</label>
-                <textarea name="body" id="body" rows="5" class="form-control"></textarea>
+                <textarea name="body" id="body" rows="5" class="form-control <%= (errors.body)?'is-invalid':'' %>"><%= post.body %></textarea>
+                <% if (errors.body) { %>
+                    <span class="invalid-feedback"><%= errors.body.message %></span>
+                <% } %>
             </div>
 
+            <% if (errors.unhandled) { %>
+                <div class="invalid-feedback d-block">
+                    <%= errors.unhandled %>
+                </div>
+            <% } %>
             <div>
                 <a href="/posts" class="btn btn-primary">Back</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
